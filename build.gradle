@@ -1,0 +1,51 @@
+plugins {
+ id 'java'
+ id 'org.springframework.boot' version '2.7.4'
+ id 'io.spring.dependency-management' version '1.1.0'
+}
+
+group 'pl.solberg'
+version '1.0'
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+repositories {
+ mavenCentral()
+}
+
+dependencies {
+ runtimeOnly group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
+ implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+ implementation 'org.springframework.boot:spring-boot-starter-web'
+ implementation 'org.springframework.boot:spring-boot-starter-validation'
+ implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+ implementation 'javax.annotation:javax.annotation-api:1.3.2'
+ implementation 'com.univocity:univocity-parsers:2.9.1'
+ implementation 'org.springdoc:springdoc-openapi-ui:1.6.12'
+ implementation 'org.slf4j:slf4j-log4j12:2.0.3'
+ //lombok
+ compileOnly 'org.projectlombok:lombok:1.18.24'
+ annotationProcessor 'org.projectlombok:lombok:1.18.24'
+ //mapstruct
+ implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+ annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+
+ //test
+ testImplementation 'org.springframework.boot:spring-boot-starter-test'
+ testImplementation group: 'org.hamcrest', name: 'hamcrest-library', version: '2.2'
+ testCompileOnly 'org.projectlombok:lombok:1.18.24'
+ testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+ testAnnotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+}
+
+compileJava {
+ options.compilerArgs = [
+   '-Amapstruct.defaultComponentModel=spring',
+   '-Amapstruct.unmappedTargetPolicy=ERROR'
+ ]
+}
+
+test {
+ useJUnitPlatform()
+}

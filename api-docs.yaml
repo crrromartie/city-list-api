@@ -1,0 +1,224 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  /cities:
+    get:
+      tags:
+      - city-controller
+      description: Find city by name
+      operationId: findByName
+      parameters:
+      - name: name
+        in: query
+        description: Name of city
+        required: true
+        schema:
+          type: string
+      responses:
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponseDto'
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponseDto'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponseDto'
+        "415":
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponseDto'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponseDto'
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CityResponseDto'
+    put:
+      tags:
+      - city-controller
+      description: Update city
+      operationId: update
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CityUpdateDto'
+        required: true
+      responses:
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponseDto'
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponseDto'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponseDto'
+        "415":
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponseDto'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponseDto'
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CityResponseDto'
+      security:
+      - update-city: []
+  /cities/all:
+    get:
+      tags:
+      - city-controller
+      description: Find city per page
+      operationId: findPerPage
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: true
+        schema:
+          minimum: 0
+          type: integer
+          format: int32
+          default: 1
+      - name: size
+        in: query
+        description: Page size
+        required: true
+        schema:
+          minimum: 0
+          type: integer
+          format: int32
+          default: 5
+      responses:
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponseDto'
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponseDto'
+        "405":
+          description: Method Not Allowed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponseDto'
+        "415":
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponseDto'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExceptionResponseDto'
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CityResponseDto'
+components:
+  schemas:
+    ExceptionResponseDto:
+      required:
+      - errorMessage
+      - timeStamp
+      type: object
+      properties:
+        timeStamp:
+          type: string
+          description: Timestamp
+          format: date-time
+        errorMessage:
+          type: string
+          description: Error message
+      description: Exception response dto
+    CityUpdateDto:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: integer
+          description: City id
+          format: int64
+        name:
+          type: string
+          description: City Name
+        photo:
+          type: string
+          description: Photo link
+      description: Updated city
+    CityResponseDto:
+      required:
+      - name
+      - photo
+      type: object
+      properties:
+        name:
+          type: string
+          description: City name
+        photo:
+          type: string
+          description: Photo link
+      description: City response
+  securitySchemes:
+    update-city:
+      type: http
+      in: header
+      scheme: bearer
